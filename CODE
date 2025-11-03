@@ -1,59 +1,27 @@
 import tkinter as tk
-from tkinter import ttk
 import requests
-from threading import Thread
 import os
 
-def download_file(url, filename, progress_bar):
-    response = requests.get(url, stream=True)
-    total = int(response.headers.get('content-length', 0))
-    downloaded = 0
-    with open(filename, 'wb') as f:
-        for data in response.iter_content(chunk_size=1024):
-            f.write(data)
-            downloaded += len(data)
-            if total > 0:
-                progress = int(downloaded * 100 / total)
-                progress_bar['value'] = progress
-            root.update_idletasks()
-
-def start_download():
-    url = url_entry.get()
-    filename = filename_entry.get()
-    Thread(target=download_file, args=(url, filename, progress)).start()
-
 def set_window_icon_from_url(url):
-    """آیکون را از یک لینک اینترنتی تنظیم می‌کند"""
+    """Set window icon from an internet URL"""
     try:
         response = requests.get(url)
         icon_path = "temp_icon.ico"
         with open(icon_path, "wb") as f:
             f.write(response.content)
         root.iconbitmap(icon_path)
-        # بعد از تنظیم، فایل موقت را حذف کن (اختیاری)
-        os.remove(icon_path)
+        os.remove(icon_path)  # optional: remove temp file
     except Exception as e:
-        print("خطا در تنظیم آیکون:", e)
+        print("Error setting icon:", e)
 
 root = tk.Tk()
 root.title("Download Manager")
 
-# 🎨 لینک آیکون (لطفاً لینک .ico دلخواهت را اینجا بگذار)
+# 🎨 لینک آیکون (همان لینک قبلی)
 icon_url = "https://raw.githubusercontent.com/amiirkebir-hue/DAINA/refs/heads/main/channels4_profile_imresizer.ico"
 set_window_icon_from_url(icon_url)
 
-# رابط کاربری
-tk.Label(root, text="URL:").pack()
-url_entry = tk.Entry(root, width=50)
-url_entry.pack()
-
-tk.Label(root, text="Filename:").pack()
-filename_entry = tk.Entry(root, width=50)
-filename_entry.pack()
-
-progress = ttk.Progressbar(root, length=400)
-progress.pack(pady=10)
-
-tk.Button(root, text="Download", command=start_download).pack()
+# فقط پیام "Program is under maintenance"
+tk.Label(root, text="Program is under maintenance", font=("Arial", 16), fg="red").pack(padx=20, pady=50)
 
 root.mainloop()
