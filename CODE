@@ -11,8 +11,10 @@ def download_file(url, filename, progress_bar):
         for data in response.iter_content(chunk_size=1024):
             f.write(data)
             downloaded += len(data)
-            progress = int(downloaded * 100 / total)
-            progress_bar['value'] = progress
+            if total > 0:
+                progress = int(downloaded * 100 / total)
+                progress_bar['value'] = progress
+            root.update_idletasks()
 
 def start_download():
     url = url_entry.get()
@@ -22,6 +24,17 @@ def start_download():
 root = tk.Tk()
 root.title("Download Manager")
 
+# حذف آیکون از پنجره (هیچ تصویری نمایش داده نشود)
+try:
+    root.iconbitmap('')  # در بعضی نسخه‌ها کار می‌کند
+except:
+    pass
+try:
+    root.tk.call('wm', 'iconphoto', root._w, '')  # در بیشتر نسخه‌ها مؤثر است
+except:
+    pass
+
+# رابط کاربری
 tk.Label(root, text="URL:").pack()
 url_entry = tk.Entry(root, width=50)
 url_entry.pack()
